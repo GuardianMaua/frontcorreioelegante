@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  src: url(assets/fonts/Poppins-Regular.ttf) format('truetype');
+}
+
+body {
+  background-color: #141414;
+  font-family: 'Poppins', sans-serif;
+}
