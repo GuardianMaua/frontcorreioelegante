@@ -7,6 +7,16 @@
   src: url(assets/fonts/Poppins-Regular.ttf) format('truetype');
 }
 
+@layer utilities {
+  .text-outline {
+    text-shadow:
+      -0.125rem -0.125rem 0 #5C0E5D,  
+      0.125rem -0.125rem 0 #5C0E5D,
+      -0.125rem 0.125rem 0 #5C0E5D,
+      0.125rem 0.125rem 0 #5C0E5D;
+  }
+}
+
 body {
   background-color: #141414;
   font-family: 'Poppins', sans-serif;
