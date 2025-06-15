@@ -24,7 +24,7 @@ interface CartaFechadaProps {
 
 const CartaFechada: React.FC<CartaFechadaProps> = ({ onReveal }) => {
   return (
-    <div className="relative w-[1300px] h-[650px] flex items-center justify-center" onClick={onReveal}>
+    <div className="relative w-[81.25rem] h-[40.625rem] flex items-center justify-center" onClick={onReveal}>
       <img src={CartaFechadaSVG} alt="My Icon" className="w-full h-full object-contain" />
       <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#5C0E5D] text-[2.5rem] animate-pulse">Clique para Revelar</p>
     </div>
@@ -33,7 +33,7 @@ const CartaFechada: React.FC<CartaFechadaProps> = ({ onReveal }) => {
 
 const CartaAberta = () => {
   return (
-    <div className="relative w-[1300px] h-[650px] flex items-center justify-center bg-white border-[6px] border-[#5C0E5D]">
+    <div className="relative w-[81.25rem] h-[40.625rem] flex items-center justify-center bg-white border-[6px] border-[#5C0E5D]">
       <p className="absolute top-1/2 -translate-y-1/2 text-[#5C0E5D] text-[2.25rem] inset-x-0 text-center px-16">{mensagem}</p>
     </div>
   );
