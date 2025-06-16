@@ -18,6 +18,7 @@ function TelaCodigo() {
           placeholder="Chave"
           className="bg-white w-full px-4 py-2 border border-gray-300 rounded"
         />
+        <button className="buttonTelaPrincipal">Procurar</button>
       </div>
     </div>
   )
