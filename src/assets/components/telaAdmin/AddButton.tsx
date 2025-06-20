@@ -9,24 +9,27 @@ interface AddButtonProps {
 const AddButton: React.FC<AddButtonProps> = ({ onSave }) => {
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleOpenPopup = () => {
-    setShowPopup(true);
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+  const handleOpenPopup = () => setShowPopup(true);
+  const handleClosePopup = () => setShowPopup(false);
 
   return (
     <>
       <button
         onClick={handleOpenPopup}
-        className="flex items-center justify-center w-72 h-32 rounded shadow hover:cursor-pointer m-2"
+        className="
+          w-72 h-32
+          min-w-[18rem] min-h-[8rem]
+          flex flex-col items-center justify-center
+          rounded shadow hover:cursor-pointer m-2
+          transition-all duration-150
+        "
         style={{ backgroundColor: '#5C0E5D', color: 'white' }}
+        aria-label="Adicionar novo"
       >
-        <Plus />
+        <div className="flex flex-col justify-center items-center w-full h-full">
+          <Plus size={36} />
+        </div>
       </button>
-
       {showPopup && (
         <AddPopup
           onClose={handleClosePopup}

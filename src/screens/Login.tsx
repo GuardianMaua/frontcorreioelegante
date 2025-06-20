@@ -1,54 +1,70 @@
 import { useState } from 'react';
+import axios from 'axios';
 import "../index.css";
-
-interface Item {
-  id: number;
-  input1: string;
-  input2: string;
-}
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
-  const [items, setItems] = useState<Item[]>([]);
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [errors, setErrors] = useState({ email: "", senha: "" });
-
+  const [loading, setLoading] = useState(false);
+  const apiKey = import.meta.env.VITE_API_KEY;
+  const navigate = useNavigate();
   const validateEmail = (email: string) => {
     return email.includes("@") && email.includes(".");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors = { email: "", senha: "" };
 
-    // Validação do Email
     if (email.trim() === "") {
       newErrors.email = "O campo de email é obrigatório.";
     } else if (!validateEmail(email)) {
       newErrors.email = "Formato de email inválido. Exemplo: exemplo@dominio.com";
     }
 
-    // Validação da Senha
     if (senha.trim() === "") {
       newErrors.senha = "O campo de senha é obrigatório.";
-    } else if (senha.length < 6) {
-      newErrors.senha = "A senha deve ter pelo menos 6 caracteres.";
+    } else if (senha.length < 4) {
+      newErrors.senha = "A senha deve ter pelo menos 4 caracteres.";
     }
 
     setErrors(newErrors);
 
     if (!newErrors.email && !newErrors.senha) {
-      setItems((prevItems) => [
-        ...prevItems,
-        { id: Date.now(), input1: email, input2: senha }
-      ]);
+      setLoading(true);
+      try {
+        const response = await axios.post(
+          apiKey + '/login',
+          {
+            email: email,
+            password: senha
+          },
+          {
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
 
-      console.log("Login:", email, "Senha:", senha);
-      alert("Login enviado com sucesso!");
-
-      setEmail("");
-      setSenha("");
+        if (response.data && response.data.token) {
+          localStorage.setItem('token', response.data.token);
+          alert("Login realizado com sucesso!");
+          setEmail("");
+          setSenha("");
+          navigate('/admin')
+        } else {
+          alert("Erro. Tente novamente.");
+        }
+      } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.message) {
+          alert(error.response.data.message);
+        } else {
+          alert("Erro ao fazer login. Verifique suas credenciais.");
+        }
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -89,6 +105,7 @@ function Login() {
               className="bg-transparent border-none outline-none w-full text-black"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
           </div>
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
@@ -117,6 +134,7 @@ function Login() {
               className="bg-transparent border-none outline-none w-full text-black"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
+              disabled={loading}
             />
           </div>
           {errors.senha && <p className="text-red-500 text-xs mt-1">{errors.senha}</p>}
@@ -125,8 +143,9 @@ function Login() {
         <button
           className="w-full text-white py-2 rounded-md transition duration-300 bg-[#5C0E5D] mt-10 shadow-[0_4px_6px_rgba(0,0,0,0.3)] hover:bg-[#4a0b4a] cursor-pointer"
           type="submit"
+          disabled={loading}
         >
-          Entrar
+          {loading ? "Entrando..." : "Entrar"}
         </button>
       </div>
     </form>
