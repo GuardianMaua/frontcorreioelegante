@@ -52,36 +52,30 @@ function Login() {
     }
   };
 
-  // const handleLogin = () => {
-  //   setItems((prevItems) => [
-  //     ...prevItems,
-  //     { id: Date.now(), input1: email, input2: senha }
-  //   ]);
-  //   setEmail('');
-  //   setSenha('');
-  // };
-
   return (
-    <form onSubmit={handleSubmit} className="login-container">
-      <div className="login-card">
-        <div className="logo-container">
+    <form
+      onSubmit={handleSubmit}
+      className="flex justify-center items-center min-h-screen bg-[#141414] font-[Poppins]"
+    >
+      <div className="bg-gray-100 p-8 pb-15 rounded-xl shadow-lg w-full max-w-md">
+        <div className="flex justify-center mb-6">
           <img
             src="/favicon.jpeg"
             alt="Logo da Guardian"
-            className="logo-image"
+            className="h-20 w-20"
           />
         </div>
 
-        <div className="form-group">
-          <div className="form-label">Login</div>
-          <div className={`input-wrapper ${errors.email ? "error-border" : ""}`}>
+        <div className="mb-6">
+          <div className="text-sm font-semibold mb-2 block text-[#5C0E5D]">Login</div>
+          <div className={`flex items-center rounded-md px-3 py-2 bg-white border-2 ${errors.email ? "border-red-500" : "border-white"} shadow-[0_2px_4px_rgba(0,0,0,0.2)]`}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="input-icon"
+              className="w-5 h-5 mr-2 text-[#5C0E5D]"
             >
               <path
                 strokeLinecap="round"
@@ -92,24 +86,24 @@ function Login() {
             <input
               type="email"
               placeholder="email"
-              className="form-input"
+              className="bg-transparent border-none outline-none w-full text-black"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          {errors.email && <p className="error-message">{errors.email}</p>}
+          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
         </div>
 
-        <div className="form-group">
-          <div className="form-label">Senha</div>
-          <div className={`input-wrapper ${errors.senha ? "error-border" : ""}`}>
+        <div className="mb-6">
+          <div className="text-sm font-semibold mb-2 block text-[#5C0E5D]">Senha</div>
+          <div className={`flex items-center rounded-md px-3 py-2 bg-white border-2 ${errors.senha ? "border-red-500" : "border-white"} shadow-[0_2px_4px_rgba(0,0,0,0.2)]`}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="input-icon"
+              className="w-5 h-5 mr-2 text-[#5C0E5D]"
             >
               <path
                 strokeLinecap="round"
@@ -120,15 +114,18 @@ function Login() {
             <input
               type="password"
               placeholder="***********"
-              className="form-input"
+              className="bg-transparent border-none outline-none w-full text-black"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
             />
           </div>
-          {errors.senha && <p className="error-message">{errors.senha}</p>}
+          {errors.senha && <p className="text-red-500 text-xs mt-1">{errors.senha}</p>}
         </div>
 
-        <button className="login-button" type="submit">
+        <button
+          className="w-full text-white py-2 rounded-md transition duration-300 bg-[#5C0E5D] mt-10 shadow-[0_4px_6px_rgba(0,0,0,0.3)] hover:bg-[#4a0b4a] cursor-pointer"
+          type="submit"
+        >
           Entrar
         </button>
       </div>
@@ -136,4 +133,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;
