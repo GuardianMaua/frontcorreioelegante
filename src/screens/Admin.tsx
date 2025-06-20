@@ -13,35 +13,43 @@ interface Item {
 
 function Admin() {
   const [items, setItems] = useState<Item[]>([]);
-  const navigate = useNavigate();
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
   const apiKey = import.meta.env.VITE_API_KEY;
-  const verifyToken = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login', { replace: true });
-      return;
-    }
-    try {
-      await axios.post(
-        apiKey + '/verify-token',
-        { token },
-        { headers: { 'Content-Type': 'application/json' } }
-      );
-    } catch (error) {
-      localStorage.removeItem('token');
-      navigate('/login', { replace: true });
-    }
-  };
 
   useEffect(() => {
-    let isMounted = true;
+    const verifyToken = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setAuthorized(false);
+        return;
+      }
+      try {
+        await axios.post(
+          apiKey + '/verify-token',
+          { token },
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+        setAuthorized(true);
+      } catch (error) {
+        localStorage.removeItem('token');
+        setAuthorized(false);
+      }
+    };
 
     verifyToken();
+  }, [apiKey]);
 
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get(apiKey + '/messages/all');
-        if (isMounted) {
+  useEffect(() => {
+    if (authorized) {
+      const fetchMessages = async () => {
+        const token = localStorage.getItem('token');
+        try {
+          const response = await axios.get(apiKey + '/messages/all', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
           const mapped = response.data
             .map((msg: any) => ({
               id: msg.code,
@@ -53,49 +61,33 @@ function Admin() {
               new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
             );
           setItems(mapped);
+        } catch (error) {}
+      };
+      fetchMessages();
+    }
+  }, [authorized, apiKey]);
+
+  const handleAddNewItem = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await axios.get(apiKey + '/messages/all', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      } catch (error) {
-      }
-    };
-
-    fetchMessages();
-
-    const interval = setInterval(() => {
-      if (isMounted) verifyToken();
-    }, 1000000);
-
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
-  }, []);
-
-  const handleAddNewItem = () => {
-    let isMounted = true;
-
-    verifyToken();
-
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get(apiKey + '/messages/all');
-        if (isMounted) {
-          const mapped = response.data
-            .map((msg: any) => ({
-              id: msg.code,
-              input1: msg.code,
-              input2: msg.key,
-              created_at: msg.created_at
-            }))
-            .sort((a: Item, b: Item) =>
-              new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-            );
-          setItems(mapped);
-        }
-      } catch (error) {
-      }
-    };
-
-    fetchMessages();
+      });
+      const mapped = response.data
+        .map((msg: any) => ({
+          id: msg.code,
+          input1: msg.code,
+          input2: msg.key,
+          created_at: msg.created_at
+        }))
+        .sort((a: Item, b: Item) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      setItems(mapped);
+    } catch (error) {}
   };
 
   const handleUpdateItem = (id: string, newInput1: string, newInput2: string) => {
@@ -109,16 +101,32 @@ function Admin() {
   };
 
   const handleDeleteItem = async (id: string) => {
-  try {
-    await axios.delete(apiKey + '/messages', {
-      data: { code: id },
-      headers: { 'Content-Type': 'application/json' }
-    });
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  } catch (error) {
-    alert('Erro ao deletar mensagem');
+    const token = localStorage.getItem('token');
+    try {
+      await axios.delete(apiKey + '/messages', {
+        data: { code: id },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    } catch (error) {
+      alert('Erro ao deletar mensagem');
+    }
+  };
+
+  if (authorized === false) {
+    return (
+      <div className="flex items-center justify-center h-screen text-white text-2xl">
+        Não autorizado
+      </div>
+    );
   }
-};
+
+  if (authorized === null) {
+    return null;
+  }
 
   return (
     <div className="flex flex-row flex-wrap p-10 text-white">
