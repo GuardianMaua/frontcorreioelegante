@@ -22,7 +22,6 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-/* Estilos usados na tela de login */
 .login-container {
   @apply flex justify-center items-center h-screen bg-black;
 }
@@ -69,7 +68,7 @@ body {
   background-color: #5C0E5D;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  margin-top: 2.5rem; /* ← Espaçamento entre senha e botão */
+  margin-top: 2.5rem;
   @apply w-full text-white py-2 rounded-md transition duration-300;
 }
 
@@ -78,11 +77,23 @@ body {
 }
 
 .input-wrapper.error-border {
-  border-color: #ef4444; /* Vermelho para erro */
+  border-color: #ef4444;
 }
 
 .error-message {
   color: #ef4444;
   font-size: 0.8rem;
   margin-top: 0.25rem;
+  
+.buttonTelaPrincipal{
+  background-color: #7a1280;
+  color: white;
+  padding: 10px 20px;
+  border:  1px solid black;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.buttonTelaPrincipal:hover{
+  background-color: #5C0E5D; 
 }
